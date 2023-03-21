@@ -1,4 +1,5 @@
-import { connect } from "./db"
+import { connect } from "./db";
+import bcrypt from "bcryptjs";
 import * as fs from 'fs';
 
 const saltAndHash = (pass: string): string => {
