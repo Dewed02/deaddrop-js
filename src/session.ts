@@ -7,7 +7,7 @@ export const getPassword = async (): Promise<string> => {
         .then((pass) => saltAndHash(pass));
 };
 
-export const saltAndHash = async (pass: string): string => {
+const saltAndHash =  (pass: string): string => {
     // 10 is the recommended default difficulty for bcrypt as of jan 2023
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(pass, salt);
