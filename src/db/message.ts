@@ -1,5 +1,5 @@
 import { connect } from "./db"
-import { saltAndHash } from "./session"
+import { saltAndHash } from "./session";
 import * as fs from 'fs';
 
 export const getMessagesForUser = async (user: string): Promise<string[]> => {
