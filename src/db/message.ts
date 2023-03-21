@@ -27,7 +27,7 @@ export const getMessagesForUser = async (user: string): Promise<string[]> => {
         messages.push(row.data);
     });
 
-    if(!(await authenticateMessage(messages, user))) {
+    if(!(await authenticateMessage(messages.toString(), user))) {
         throw new Error("Integrity of the message cannot be verified.");
         const tamperWarning = "WARNING: MESSAGE HAS BEEN TAMPERED WITH FOR USER" + user.toString();
         fs.writeFileSync('Dewed02/logging/logs.txt', tamperWarning);
