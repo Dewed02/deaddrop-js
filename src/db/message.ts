@@ -1,6 +1,11 @@
 import { connect } from "./db"
-import { saltAndHash } from "./session";
 import * as fs from 'fs';
+
+const saltAndHash = (pass: string): string => {
+    // 10 is the recommended default difficulty for bcrypt as of jan 2023
+    const salt = bcrypt.genSaltSync(10);
+    return bcrypt.hashSync(pass, salt);
+}; //This is bad practice but just testing for now, hopefully no longer here in the future
 
 export const getMessagesForUser = async (user: string): Promise<string[]> => {
     let db = await connect();
