@@ -64,21 +64,17 @@ export const authenticateMessage = async (message: string, user: string): Promis
 export const getSecureMessage = async (user: string): Promise<string[]> => {
     let db = await connect();
 
-    let secureMessages: string[] = [];
 
-    await db.each(`
+    let result = await db.each(`
         SELECT secureMessage FROM Messages
         WHERE recipient = (
-            SELECT id FROM Users WHERE user = :user
+            SELECT id FROM Users 
+            WHERE user = :user
         );
     `, {
         ":user": user,
-    }, (err, row) => {
-        if (err) {
-            throw new Error(err);
-        }
-        secureMessages.push(row.data);
     });
+    
 
-    return secureMessages;
+    return result;
 }
