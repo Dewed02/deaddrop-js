@@ -61,8 +61,10 @@ export const authenticateMessage = async (message: string, user: string): Promis
     return bcrypt.compare(message.toString(), secureMessage.toString());
 }
 
-export const getSecureMessage = async (user: string): Promise<string[]> => {
+export const getSecureMessage = async (user: string): Promise<string> => {
     let db = await connect();
+    
+     let secureMessage: string[] = [];
 
 
     let result = await db.each(`
@@ -73,8 +75,13 @@ export const getSecureMessage = async (user: string): Promise<string[]> => {
         );
     `, {
         ":user": user,
+    }, (err, row) => {
+        if (err) {
+            throw new Error(err);
+        }
+        secureMessage.push(row.secureMessage);
     });
     
 
-    return result;
+    return secureMessage.toString();
 }
