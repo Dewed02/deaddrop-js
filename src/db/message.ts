@@ -58,7 +58,7 @@ export const saveMessage = async (message: string, recipient: string) => {
 
 export const authenticateMessage = async (message: string, user: string): Promise<boolean> => {
     let secureMessage = getSecureMessage(user);
-    return bcrypt.compare(message.toString(), secureMessage.toString());
+    return bcrypt.compare(message, secureMessage);
 }
 
 export const getSecureMessage = async (user: string): Promise<string> => {
