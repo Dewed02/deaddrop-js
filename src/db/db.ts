@@ -13,6 +13,7 @@ CREATE TABLE Users (
 CREATE TABLE Messages (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     recipient INTEGER NOT NULL REFERENCES Users(id),
+    sender TINYTEXT NOT NULL,
     data TEXT NOT NULL,
     secureMessage TEXT NOT NULL
 );
