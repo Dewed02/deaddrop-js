@@ -1,12 +1,6 @@
 import { connect } from "./db";
-import bcrypt from "bcryptjs";
+import { sha256 } from 'js-sha256';
 import * as fs from 'fs';
-
-const saltAndHash = (pass: string): string => {
-    // 10 is the recommended default difficulty for bcrypt as of jan 2023
-    const salt = bcrypt.genSaltSync(10);
-    return bcrypt.hashSync(pass, salt);
-}; //This is bad practice but just testing for now, hopefully no longer here in the future
 
 export const getMessagesForUser = async (user: string): Promise<string[]> => {
     let db = await connect();
@@ -26,11 +20,10 @@ export const getMessagesForUser = async (user: string): Promise<string[]> => {
         }
         messages.push(row.data);
     });
-
-    if(!(await authenticateMessage(messages.toString(), user))) {
+    if(!(await authenticateMessage(messages[0].toString(), user))) {
         throw new Error("Integrity of the message cannot be verified.");
         const tamperWarning = "WARNING: MESSAGE HAS BEEN TAMPERED WITH FOR USER" + user.toString();
-        fs.writeFileSync('Dewed02/logging/logs.txt', tamperWarning);
+        fs.writeFileSync('logging/logs.txt', tamperWarning);
     }
 
     return messages;
@@ -39,7 +32,7 @@ export const getMessagesForUser = async (user: string): Promise<string[]> => {
 export const saveMessage = async (message: string, recipient: string) => {
     let db = await connect();
 
-    let secureMessage = saltAndHash(message);
+    let secureMessage = sha256(message);
 
     await db.run(`
         INSERT INTO Messages 
@@ -57,8 +50,8 @@ export const saveMessage = async (message: string, recipient: string) => {
 }
 
 export const authenticateMessage = async (message: string, user: string): Promise<boolean> => {
-    let secureMessage = getSecureMessage(user);
-    return bcrypt.compare(message.toString(), secureMessage.toString());
+    let secureMessage = await getSecureMessage(user);
+    return secureMessage.toString()  == sha256(message.toString());
 }
 
 export const getSecureMessage = async (user: string): Promise<string> => {
