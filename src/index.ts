@@ -71,7 +71,7 @@ if (options.new) {
   if (user === "") {
     console.error("Please specify a user when running in read mode");
   } else {
-    readMessages(user);
+    readMessages(user, sender);
   }
 } else {
   console.error(
