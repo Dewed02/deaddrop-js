@@ -64,14 +64,14 @@ if (options.new) {
     console.error("Please specify a to source when running in send mode");
   } 
   else {
-    sendMessage(user);
+    sendMessage(user, sender);
   }
 } else if (options.read) {
   let user = validateInputString(options.user);
   if (user === "") {
     console.error("Please specify a user when running in read mode");
   } else {
-    readMessages(user, sender);
+    readMessages(user);
   }
 } else {
   console.error(
