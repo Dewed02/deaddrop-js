@@ -56,6 +56,33 @@ export const authenticateMessage = async (message: string, user: string): Promis
     return secureMessage.toString()  == sha256(message.toString());
 }
 
+
+export const getMessageSender = async (user: string): Promise<string> => {
+    let db = await connect();
+    
+     let sender: string[] = [];
+
+
+    let result = await db.each(`
+        SELECT sender FROM Messages
+        WHERE recipient = (
+            SELECT id FROM Users 
+            WHERE user = :user
+        );
+    `, {
+        ":user": user,
+    }, (err, row) => {
+        if (err) {
+            throw new Error(err);
+        }
+        sender.push(row.sender);
+    });
+    
+
+    return sender.toString();
+}
+
+
 export const getSecureMessage = async (user: string): Promise<string> => {
     let db = await connect();
     
