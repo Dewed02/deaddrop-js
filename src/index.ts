@@ -24,6 +24,7 @@ program
   .option("--read", "use the utility in read mode")
   .option("--user <name>", "specify a user for verbs requiring a user target")
   .option("--to <name>", "specify the user to send a message to")
+  .option("--from <name>", "specify the user that send message")
   .parse(process.argv);
 
 const options = program.opts();
@@ -56,9 +57,13 @@ if (options.new) {
   });
 } else if (options.send) {
   let user = validateInputString(options.to);
+  let sender = validateInputString(options.fron);
   if (user === "") {
     console.error("Please specify a to target when running in send mode");
-  } else {
+  } else if (sender === "") {
+    console.error("Please specify a to source when running in send mode");
+  } 
+  else {
     sendMessage(user);
   }
 } else if (options.read) {
