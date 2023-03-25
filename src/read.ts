@@ -14,24 +14,6 @@ export async function readMessages(user: string) {
 
         getMessagesForUser(user).then((messages) => {
            messages.forEach((e: string) => console.log(e, "\n"));
-       
-        
-        /*var userRead = [];  //Desperation using array to log user info
-            
-        var date = new Date(); //Date object to log access time
-        let time = date.toString(); 
-      
-            
-        userRead.push(user);        //Push user name
-        userRead.push(time + ', '); //Push time accessed
-            
-        let log = userRead.toString(); //Convert array to string
-      
-         
-        const fs = require('fs');    */
-            
-     
-  
         
         userReadMessage(user);  
         });
