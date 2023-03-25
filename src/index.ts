@@ -57,7 +57,7 @@ if (options.new) {
   });
 } else if (options.send) {
   let user = validateInputString(options.to);
-  let sender = validateInputString(options.fron);
+  let sender = validateInputString(options.from);
   if (user === "") {
     console.error("Please specify a to target when running in send mode");
   } else if (sender === "") {
