@@ -26,7 +26,7 @@ export const getMessagesForUser = async (user: string): Promise<string[]> => {
         fs.writeFileSync('logging/logs.txt', tamperWarning);
     }
     
-    let sender = getMessageSender(user);
+    let sender = await getMessageSender(user);
     messages.push(" From: " + sender);
 
     return messages;
