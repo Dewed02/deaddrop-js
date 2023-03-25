@@ -9,6 +9,7 @@ export const getMessagesForUser = async (user: string): Promise<string[]> => {
 
     await db.each(`
         SELECT data FROM Messages
+        SELECT sender FROM Messages
         WHERE recipient = (
             SELECT id FROM Users WHERE user = :user
         );
@@ -19,6 +20,7 @@ export const getMessagesForUser = async (user: string): Promise<string[]> => {
             throw new Error(err);
         }
         messages.push(row.data);
+        messages.push(row.sender);
     });
     if(!(await authenticateMessage(messages[0].toString(), user))) {
         throw new Error("Integrity of the message cannot be verified.");
