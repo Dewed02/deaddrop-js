@@ -29,21 +29,23 @@ export const getMessagesForUser = async (user: string): Promise<string[]> => {
     return messages;
 }
 
-export const saveMessage = async (message: string, recipient: string) => {
+export const saveMessage = async (message: string, recipient: string, sender: string) => {
     let db = await connect();
 
     let secureMessage = sha256(message);
 
     await db.run(`
         INSERT INTO Messages 
-            (recipient, data, secureMessage)
+            (recipient, sender, data, secureMessage)
         VALUES (
             (SELECT id FROM Users WHERE user = :user),
+            :sender,
             :message,
             :secureMessage
         )
     `, {
         ":user": recipient,
+        ":sender": sender,
         ":message": message,
         ":secureMessage": secureMessage,
     });
