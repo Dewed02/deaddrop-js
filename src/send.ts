@@ -3,18 +3,22 @@ import { saveMessage, userExists } from "./db";
 import { userSentMessage } from "./logging"
 import { authenticate } from "./session"; // Used to make users sign in before sending a message
 
-export const sendMessage = async (user: string) => {
+export const sendMessage = async (user: string, sender: string) => {
     try {
         if (!await userExists(user)) {
             throw new Error("Destination user does not exist");
         }
         
-        if (!await authenticate(user)) {
+        if (!await userExists(sender)) {
+            throw new Error("Source user does not exist");
+        }
+        
+        if (!await authenticate(sender)) {
             throw new Error("Unable to authenticate"); //Requires user to sign in before sending message
         }
 
         getUserMessage().then(async (message) => {
-            await saveMessage(message, user);
+            await saveMessage(message, user, sender);
         });
         
         userSentMessage(user); // Log user that sent message
