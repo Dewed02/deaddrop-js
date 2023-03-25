@@ -25,6 +25,9 @@ export const getMessagesForUser = async (user: string): Promise<string[]> => {
         const tamperWarning = "WARNING: MESSAGE HAS BEEN TAMPERED WITH FOR USER" + user.toString();
         fs.writeFileSync('logging/logs.txt', tamperWarning);
     }
+    
+    let sender = getMessageSender(user);
+    messages.push(" From: " + sender);
 
     return messages;
 }
