@@ -19,13 +19,15 @@ export const getMessagesForUser = async (user: string): Promise<string[]> => {
             throw new Error(err);
         }
         messages.push(row.data);
-    });
-    if(!(await authenticateMessage(messages[0].toString(), user))) {
+    }); 
+
+    if(!(await authenticateMessage(messages, user))) {
+        const tamperWarning = "WARNING: MESSAGE HAS BEEN TAMPERED WITH FOR USER " + user;
+        const fs = require('fs');
+        fs.writeFileSync('tamper.txt', tamperWarning);
         throw new Error("Integrity of the message cannot be verified.");
-        const tamperWarning = "WARNING: MESSAGE HAS BEEN TAMPERED WITH FOR USER" + user.toString();
-        fs.writeFileSync('logging/logs.txt', tamperWarning);
     }
-    
+
     let sender = await getMessageSender(user);
     messages.push(" From: " + sender);
 
@@ -54,9 +56,14 @@ export const saveMessage = async (message: string, recipient: string, sender: st
     });
 }
 
-export const authenticateMessage = async (message: string, user: string): Promise<boolean> => {
+export const authenticateMessage = async (message: string[], user: string): Promise<boolean> => {
     let secureMessage = await getSecureMessage(user);
-    return secureMessage.toString()  == sha256(message.toString());
+    for(let i = 0; i < message.length; i++) {
+	if(secureMessage[i].toString()  != sha256(message[i].toString())) {
+		return false;
+	}
+    }
+    return true;
 }
 
 
@@ -86,7 +93,7 @@ export const getMessageSender = async (user: string): Promise<string> => {
 }
 
 
-export const getSecureMessage = async (user: string): Promise<string> => {
+export const getSecureMessage = async (user: string): Promise<string[]> => {
     let db = await connect();
     
      let secureMessage: string[] = [];
@@ -108,5 +115,5 @@ export const getSecureMessage = async (user: string): Promise<string> => {
     });
     
 
-    return secureMessage.toString();
+    return secureMessage;
 }
