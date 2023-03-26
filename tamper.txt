@@ -1,1 +1,24 @@
 WARNING: MESSAGE HAS BEEN TAMPERED WITH FOR USER derek
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+I know this isn't ideal but here is the output the user will recieve if a message is tampered with:
+
+/Users/derekwalton/logging/dist/db/message.js:47
+        throw new Error("Integrity of the message cannot be verified.");
+              ^
+
+Error: Integrity of the message cannot be verified.
+    at getMessagesForUser (/Users/derekwalton/logging/dist/db/message.js:47:15)
